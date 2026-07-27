@@ -5,8 +5,7 @@ export default {
 
   initialize() {
     withPluginApi("0.8", (api) => {
-      const currentUser = api.getCurrentUser();
-      if (!currentUser) {
+      if (settings.user_in_closed_sidebar_groups) {
         const applicationController = api.container.lookup("controller:application");
         applicationController.set("showSidebar", false);
       }
