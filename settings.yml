@@ -1,0 +1,7 @@
+closed_sidebar_groups:
+  default: "4"
+  type: list
+  list_type: group
+  resolve_group_membership: true
+  description:
+    en: "Select which groups should see the sidebar closed by default."
