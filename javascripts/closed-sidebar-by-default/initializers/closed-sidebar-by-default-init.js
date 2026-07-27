@@ -5,8 +5,11 @@ export default {
 
   initialize() {
     withPluginApi("0.8", (api) => {
-      const applicationController = api.container.lookup("controller:application");
-      applicationController.set("showSidebar", false);
+      const currentUser = api.getCurrentUser();
+      if (!currentUser) {
+        const applicationController = api.container.lookup("controller:application");
+        applicationController.set("showSidebar", false);
+      }
     });
   },
 };
