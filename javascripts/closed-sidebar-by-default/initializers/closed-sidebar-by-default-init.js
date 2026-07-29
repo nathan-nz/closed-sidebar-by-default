@@ -1,14 +1,21 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
+import { apiInitializer } from "discourse/lib/api";
 
-export default {
-  name: "closed-sidebar-by-default",
+const HIDE_SIDEBAR_KEY = "sidebar-hidden";
+const INITIALIZED_KEY = "closed-sidebar-by-default-initialized";
 
-  initialize() {
-    withPluginApi("0.8", (api) => {
-      if (settings.user_in_closed_sidebar_groups) {
-        const applicationController = api.container.lookup("controller:application");
-        applicationController.set("showSidebar", false);
-      }
-    });
-  },
-};
+export default apiInitializer("1.8.0", (api) => {
+  const keyValueStore = api.container.lookup("service:key-value-store");
+  const userGroups = settings.user_in_closed_sidebar_groups;
+
+  if (userGroups) {
+    if (!keyValueStore.getItem(INITIALIZED_KEY)) {
+      keyValueStore.setItem(HIDE_SIDEBAR_KEY, "true");
+      keyValueStore.setItem(INITIALIZED_KEY, "true");
+    }
+  } else {
+    if (keyValueStore.getItem(INITIALIZED_KEY)) {
+      keyValueStore.removeItem(HIDE_SIDEBAR_KEY);
+      keyValueStore.removeItem(INITIALIZED_KEY);
+    }
+  }
+});
